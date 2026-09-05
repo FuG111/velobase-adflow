@@ -10,6 +10,7 @@ import {
   KeyRound,
   X,
 } from "lucide-react";
+import { APP_NAME } from "@/config/brand";
 import { AppLogo } from "@/components/ui/app-logo";
 import { cn } from "@/lib/utils";
 import {
@@ -100,8 +101,10 @@ export function LoginModalMobile() {
     >
       <DrawerContent className="flex max-h-[92dvh] flex-col rounded-t-[20px] bg-white outline-none dark:bg-slate-950">
         <VisuallyHidden.Root>
-          <DrawerTitle>{t("welcomeTitle")}</DrawerTitle>
-          <DrawerDescription>{t("welcomeSubtitle")}</DrawerDescription>
+          <DrawerTitle>{t("welcomeTitle", { appName: APP_NAME })}</DrawerTitle>
+          <DrawerDescription>
+            {t("welcomeSubtitle", { appName: APP_NAME })}
+          </DrawerDescription>
         </VisuallyHidden.Root>
 
         {/* 顶部把手 - 也是 Drawer 默认会带的，这里不渲染自定义的了 */}
@@ -123,10 +126,10 @@ export function LoginModalMobile() {
 
               <div className="mb-8 space-y-2 text-center">
                 <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-                  {t("welcomeTitle")}
+                  {t("welcomeTitle", { appName: APP_NAME })}
                 </h2>
                 <p className="text-slate-500 dark:text-slate-400">
-                  {t("welcomeSubtitle")}
+                  {t("welcomeSubtitle", { appName: APP_NAME })}
                 </p>
                 <div className="pt-2">
                   <MobilePromotionBadge />

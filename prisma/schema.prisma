@@ -1550,3 +1550,170 @@ model SupportSyncCursor {
 
   @@map("support_sync_cursors")
 }
+
+// AdFlow product data. Framework auth/payment tables remain unchanged.
+enum AdsPlatform {
+  GOOGLE
+  META
+}
+
+enum AdsConnectionStatus {
+  ACTIVE
+  REAUTH_REQUIRED
+  REVOKED
+}
+
+enum AdsAccountStatus {
+  BOUND
+  DISCONNECTED
+}
+
+enum AdsRunStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum AdsRecommendationStatus {
+  OPEN
+  ACCEPTED
+  DISMISSED
+}
+
+model AdsConnection {
+  id               String              @id @default(cuid())
+  userId           String
+  platform         AdsPlatform
+  externalIdentity String
+  credentials      String
+  status           AdsConnectionStatus @default(ACTIVE)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  accounts         AdsAccount[]
+
+  @@unique([userId, platform, externalIdentity])
+  @@index([userId, status])
+}
+
+model AdsAccount {
+  id           String           @id @default(cuid())
+  userId       String
+  connectionId String
+  platform     AdsPlatform
+  externalId   String
+  managerId    String?
+  name         String
+  currency     String
+  timezone     String
+  industry     String           @default("general")
+  region       String           @default("GLOBAL")
+  objective    String           @default("CONVERSIONS")
+  status       AdsAccountStatus @default(BOUND)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  connection   AdsConnection    @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  runs         AdsSyncRun[]
+  reports      AdsReport[]
+
+  @@unique([userId, platform, externalId])
+  @@index([userId, status])
+}
+
+model AdsSyncRun {
+  id           String       @id @default(cuid())
+  userId       String
+  accountId    String
+  status       AdsRunStatus @default(QUEUED)
+  startDate    String
+  endDate      String
+  snapshot     Json?
+  snapshotHash String?
+  errorCode    String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  account      AdsAccount   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  reports      AdsReport[]
+
+  @@index([userId, accountId, createdAt])
+  @@index([status, updatedAt])
+}
+
+model AdsReport {
+  id              String              @id @default(cuid())
+  userId          String
+  accountId       String
+  syncRunId       String
+  snapshotHash    String
+  ruleVersion     String              @default("1")
+  locale          String              @default("zh")
+  status          AdsRunStatus        @default(QUEUED)
+  evidence        Json?
+  summary         String?
+  model           String?
+  errorCode       String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  account         AdsAccount          @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  syncRun         AdsSyncRun          @relation(fields: [syncRunId], references: [id], onDelete: Cascade)
+  recommendations AdsRecommendation[]
+
+  @@unique([accountId, snapshotHash, ruleVersion, locale])
+  @@index([userId, accountId, createdAt])
+  @@index([status, updatedAt])
+}
+
+model AdsRecommendation {
+  id          String                  @id @default(cuid())
+  userId      String
+  reportId    String
+  evidenceKey String
+  title       String
+  rationale   String
+  steps       Json
+  status      AdsRecommendationStatus @default(OPEN)
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+  report      AdsReport               @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([userId, reportId])
+}
+
+model AdsBenchmark {
+  id          String      @id @default(cuid())
+  platform    AdsPlatform
+  industry    String
+  region      String
+  objective   String
+  currency    String
+  attribution String
+  metric      String
+  value       Float
+  sourceUrl   String
+  licenseNote String
+  sampleSize  Int
+  periodStart String
+  periodEnd   String
+  published   Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([platform, industry, region, objective, published])
+}
+
+model AdsPlanChange {
+  id              String       @id @default(cuid())
+  userId          String
+  subscriptionId  String       @unique
+  targetProductId String
+  targetLimit     Int
+  effectiveAt     DateTime
+  stripePriceId   String?
+  scheduleId      String?
+  status          AdsRunStatus @default(QUEUED)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([userId, status])
+}

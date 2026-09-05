@@ -68,3 +68,5 @@ export {
   IMAGE_GENERATION_QUEUE_NAME,
   type ImageGenerationJobData,
 } from "./image-generation.queue";
+
+export { adflowQueue } from "@/modules/ad-accounts/worker/queue";

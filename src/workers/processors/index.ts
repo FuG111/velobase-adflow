@@ -70,3 +70,5 @@ export {
 } from "./google-ads-upload";
 
 export { processImageGenerationJob } from "./image-generation";
+
+export { processAdflowJob } from "@/server/adflow/processor";

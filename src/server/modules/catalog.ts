@@ -12,6 +12,7 @@ import {
 } from "./manifest";
 
 export const MODULE_DEFINITIONS = [
+  { id: "adflow", kind: "feature", label: "AdFlow", modeEnv: "ADFLOW_MODE", loadFrameworkModule: async () => (await import("./adflow")).adflowModule, loadWorkerContributions: async () => (await import("@/workers/features/adflow")).getAdflowWorkerContributions() },
   {
     id: "posthog",
     kind: "integration",
@@ -200,6 +201,7 @@ export const MODULE_DEFINITIONS = [
 ] satisfies readonly ModuleDefinition[];
 
 const MODULE_ENV = {
+  ADFLOW_MODE: env.ADFLOW_MODE,
   POSTHOG_MODE: env.POSTHOG_MODE,
   GOOGLE_ADS_MODE: env.GOOGLE_ADS_MODE,
   LARK_MODE: env.LARK_MODE,

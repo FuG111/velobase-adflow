@@ -1,3 +1,4 @@
+import { adflowRouter } from "@/modules/ad-accounts/server/router";
 import { storageRouter } from "@/server/api/routers/storage";
 import { productRouter } from "@/server/product/routers";
 import { billingRouter } from "@/server/billing/routers";
@@ -28,6 +29,7 @@ import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
  * dead-code elimination.
  */
 export const appRouter = createTRPCRouter({
+  adflow: adflowRouter,
   // Core — always present
   admin: adminRouter,
   storage: storageRouter,

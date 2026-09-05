@@ -1,3 +1,4 @@
+import { APP_NAME } from "@/config/brand";
 import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
 
@@ -19,14 +20,24 @@ const textClasses = {
   lg: "text-2xl",
 };
 
-export function AppLogo({ className, size = "md", variant = "default" }: AppLogoProps) {
+export function AppLogo({
+  className,
+  size = "md",
+  variant = "default",
+}: AppLogoProps) {
   return (
-    <div className={cn("flex items-center gap-2 font-poppins group", className)}>
+    <div
+      className={cn("font-poppins group flex items-center gap-2", className)}
+    >
       <Logo size={logoSizeMap[size]} className="text-primary" />
       {variant === "default" && (
-        <div className={cn("font-bold tracking-tight leading-none flex items-center", textClasses[size])}>
-          <span className="text-foreground">AI</span>
-          <span className="text-foreground/40 font-medium ml-1">SaaS</span>
+        <div
+          className={cn(
+            "flex items-center leading-none font-bold tracking-tight",
+            textClasses[size],
+          )}
+        >
+          <span className="text-foreground">{APP_NAME}</span>
         </div>
       )}
     </div>

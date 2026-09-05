@@ -3,6 +3,10 @@ import { createLogger } from "@/lib/logger";
 const log = createLogger("event-bus");
 
 export type EventPayload = {
+  "ads:account-bound": { userId: string; accountId: string };
+  "ads:sync-completed": { userId: string; accountId: string; syncRunId: string };
+  "ads:diagnosis-completed": { userId: string; accountId: string; reportId: string };
+  "ads:recommendation-updated": { userId: string; recommendationId: string };
   "payment:succeeded": {
     paymentId: string;
     orderId: string;

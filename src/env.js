@@ -29,6 +29,18 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
+    ADFLOW_MODE: z.enum(["auto", "on", "off"]).default("auto"),
+    ADFLOW_GOOGLE_CLIENT_ID: z.string().optional(),
+    ADFLOW_GOOGLE_CLIENT_SECRET: z.string().optional(),
+    ADFLOW_GOOGLE_DEVELOPER_TOKEN: z.string().optional(),
+    ADFLOW_GOOGLE_API_VERSION: z.string().regex(/^v[0-9]+$/).default("v25"),
+    ADFLOW_META_APP_ID: z.string().optional(),
+    ADFLOW_META_APP_SECRET: z.string().optional(),
+    ADFLOW_META_API_VERSION: z.string().regex(/^v[0-9]+\.[0-9]+$/).optional(),
+    ADFLOW_CREDENTIAL_ENCRYPTION_KEY: z.string().regex(/^[a-f0-9]{64}$/i).optional(),
+    ADFLOW_AI_MODEL: z.string().default("gpt-4.1-mini"),
+    ADFLOW_MAX_DAILY_REPORTS: positiveInteger.default("5"),
+
     AUTH_SECRET: createAuthSecretSchema(process.env.NODE_ENV),
     AUTH_URL: z.string().url().optional(),
     NEXTAUTH_SECRET: z.string().optional(),
@@ -269,6 +281,18 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
+    ADFLOW_MODE: process.env.ADFLOW_MODE,
+    ADFLOW_GOOGLE_CLIENT_ID: process.env.ADFLOW_GOOGLE_CLIENT_ID,
+    ADFLOW_GOOGLE_CLIENT_SECRET: process.env.ADFLOW_GOOGLE_CLIENT_SECRET,
+    ADFLOW_GOOGLE_DEVELOPER_TOKEN: process.env.ADFLOW_GOOGLE_DEVELOPER_TOKEN,
+    ADFLOW_GOOGLE_API_VERSION: process.env.ADFLOW_GOOGLE_API_VERSION,
+    ADFLOW_META_APP_ID: process.env.ADFLOW_META_APP_ID,
+    ADFLOW_META_APP_SECRET: process.env.ADFLOW_META_APP_SECRET,
+    ADFLOW_META_API_VERSION: process.env.ADFLOW_META_API_VERSION,
+    ADFLOW_CREDENTIAL_ENCRYPTION_KEY: process.env.ADFLOW_CREDENTIAL_ENCRYPTION_KEY,
+    ADFLOW_AI_MODEL: process.env.ADFLOW_AI_MODEL,
+    ADFLOW_MAX_DAILY_REPORTS: process.env.ADFLOW_MAX_DAILY_REPORTS,
+
     AUTH_SECRET: authSecret,
     AUTH_URL: authUrl,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,

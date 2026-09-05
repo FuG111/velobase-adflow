@@ -9,6 +9,13 @@ export const posthogModule: FrameworkModule = {
   enabled: true,
 
   registerEventHandlers(bus: AppEventBus) {
+    const adsEvents = ["ads:account-bound", "ads:sync-completed", "ads:diagnosis-completed", "ads:recommendation-updated"] as const;
+    for (const event of adsEvents) bus.on(event, async ({ userId }) => {
+      const { safeTrack } = await import("@/analytics/server");
+      const { ADFLOW_EVENTS } = await import("@/analytics/events/adflow");
+      const names = [ADFLOW_EVENTS.ACCOUNT_BOUND, ADFLOW_EVENTS.SYNC_COMPLETED, ADFLOW_EVENTS.DIAGNOSIS_COMPLETED, ADFLOW_EVENTS.RECOMMENDATION_UPDATED];
+      await safeTrack(names[adsEvents.indexOf(event)]!, userId);
+    });
     bus.on("payment:succeeded", async ({ paymentId, userId, gateway, amountCents, currency }) => {
       const { getServerPostHog } = await import("@/analytics/server");
       const { BILLING_EVENTS } = await import("@/analytics/events/billing");

@@ -3,6 +3,7 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import Script from "next/script";
 import { Mail, ArrowLeft, Loader2, Eye, EyeOff, KeyRound } from "lucide-react";
+import { APP_NAME } from "@/config/brand";
 import { AppLogo } from "@/components/ui/app-logo";
 import { cn } from "@/lib/utils";
 import { useLogin, TURNSTILE_SITE_KEY } from "./use-login";
@@ -127,10 +128,10 @@ export function LoginContent({
 
         <div className="mb-8 flex flex-col items-center gap-2">
           <Title className="text-center text-2xl font-bold tracking-tight">
-            {t("welcomeTitle")}
+            {t("welcomeTitle", { appName: APP_NAME })}
           </Title>
           <Description className="text-muted-foreground text-center text-base">
-            {t("welcomeSubtitle")}
+            {t("welcomeSubtitle", { appName: APP_NAME })}
           </Description>
           <div className="mt-2">
             <PromotionBadge />
