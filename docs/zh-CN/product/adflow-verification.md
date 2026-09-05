@@ -19,3 +19,7 @@
 配置清单已在 [产品运行说明](./adflow.md) 按“必须配置 / 上线前建议配置 / 可选增强”列出；密钥只填写到运行环境或 GitHub Secret，不放入仓库或聊天。套餐草稿必须设置真实价格并启用；行业基准需导入有许可、来源与口径的数据。
 
 GitHub Actions 的实际运行结果以推送对应 commit 的工作流为准；工作流接受部署请求不等于已经完成真实服务验收。
+
+## Worker 容器补充验证（2026-09-06）
+
+部署复核发现 Dockerfile.worker 未复制业务模块及 env-normalization.js。已补齐镜像文件，重新构建并在本地 Node 20 容器中连接独立测试 PostgreSQL / Redis 启动：AdFlow Worker 和调度器加载成功，outbox dispatch 任务执行成功，内部 `/health` 返回 HTTP 200。此次仅调整镜像复制清单，验证采用实际容器构建与启动；未重复运行应用 Lint、TypeScript 或 Next.js 构建。云端新版本的健康状态仍需通过 Velobase 控制台确认。
